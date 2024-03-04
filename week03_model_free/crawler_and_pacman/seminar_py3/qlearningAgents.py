@@ -51,7 +51,8 @@ class QLearningAgent(ReinforcementAgent):
         self._qValues[state][action] = value
 
 #---------------------#start of your code#---------------------#
-
+        
+        
     def getValue(self, state):
         """
           Returns max_action Q(state,action)
@@ -62,11 +63,9 @@ class QLearningAgent(ReinforcementAgent):
         # If there are no legal actions, return 0.0
         if len(possibleActions) == 0:
             return 0.0
-
         "*** YOUR CODE HERE ***"
-        raise NotImplementedError
+        return max([self.getQValue(state, act) for act in possibleActions])
 
-        return 0.
 
     def getPolicy(self, state):
         """
@@ -78,11 +77,10 @@ class QLearningAgent(ReinforcementAgent):
         # If there are no legal actions, return None
         if len(possibleActions) == 0:
             return None
-
-        best_action = None
-
+        
         "*** YOUR CODE HERE ***"
-        raise NotImplementedError
+        best_action = max(possibleActions, key=lambda action: self.getQValue(state, action))
+
 
         return best_action
 
@@ -110,7 +108,10 @@ class QLearningAgent(ReinforcementAgent):
         epsilon = self.epsilon
 
         "*** YOUR CODE HERE ***"
-        raise NotImplementedError
+        if random.random() < epsilon:
+            action = random.choice(possibleActions)
+        else:
+            action = self.getPolicy(state)
 
         return action
 
@@ -128,12 +129,11 @@ class QLearningAgent(ReinforcementAgent):
         learning_rate = self.alpha
 
         "*** YOUR CODE HERE ***"
-        raise NotImplementedError
 
-        reference_qvalue = PleaseImplementMe
-        updated_qvalue = PleaseImplementMe
+        reference_qvalue = reward + gamma * self.getValue(nextState)
+        updated_qvalue = learning_rate * reference_qvalue + (1 - learning_rate) * self.getQValue(state, action)
 
-        self.setQValue(PleaseImplementMe, PleaseImplementMe, updated_qvalue)
+        self.setQValue(state, action, updated_qvalue)
 
 
 #---------------------#end of your code#---------------------#
